@@ -53,6 +53,34 @@ async function hasValidProperties(req, res, next) {
   next();
 }
 
+
+
+let days = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday'
+];
+
+ function isValidDayOfWeek(req, res, next) {
+  if(req.body.data) {
+    req.body = req.body.data
+  }
+  const data = req.body; 
+  const reservationDate = new Date(`${data.reservation_date} ${data.reservation_time}`);
+  let dayName = days[reservationDate.getDay()]
+  if(reservationDate < new Date() ) {
+    return next({status: 400, message: "Reservations can only be created for a future date and may not be on tuesdays"})
+  }
+  if(dayName === "Tuesday") {
+    return next({status: 400, message: "Restaurant is closed on tuesdays"})
+  }
+   next()
+}
+
 const hasRequiredProperties = hasProperties(
   "first_name",
   "last_name",
@@ -72,6 +100,8 @@ async function list(req, res) {
   res.status(200).json({ data });
 }
 
+
+
 async function read(req, res) {
   const { reservation: data } = res.locals;
   res.json({ data });
@@ -89,6 +119,7 @@ module.exports = {
   create: [
     hasValidProperties,
     hasRequiredProperties,
+    isValidDayOfWeek,
     asyncErrorBoundary(create),
   ],
 };
