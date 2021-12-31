@@ -27,6 +27,10 @@ async function reservationExists(req, res, next) {
   });
 }
 
+const dateIsDate = /[0-9]{4}-[0-9]{2}-[0-9]{2}/;
+const timeIsTime = /[0-9]{2}:[0-9]{2}/;
+
+
 async function hasValidProperties(req, res, next) {
   const { data = {} } = req.body;
   if (!data) {
@@ -38,6 +42,12 @@ async function hasValidProperties(req, res, next) {
     }
     if (field === "people" && !Number.isInteger(data.people)) {
       return next({ status: 400, message: `Requires ${field} to be a number` });
+    }
+    if(field === "reservation_date" && !dateIsDate.test(data.reservation_date)) {
+      return next({ status: 400, message: `Requires ${field} to be a properly formatted date`})
+    }
+    if(field === "reservation_time" && !timeIsTime.test(data.reservation_time)) {
+      return next({ status: 400, message: `Requires ${field} to be a properly formatted time`})
     }
   });
   next();
@@ -75,7 +85,7 @@ async function create(req, res, next) {
 
 module.exports = {
   list,
-  read: [reservationExists, read],
+  read: [asyncErrorBoundary(reservationExists), read],
   create: [
     hasValidProperties,
     hasRequiredProperties,
