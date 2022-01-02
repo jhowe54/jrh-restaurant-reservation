@@ -8,7 +8,7 @@ function list(date) {
     .andWhere({ "reservation_date" : date})
     .orderBy("reservation_time", "asc")
     .then()
-    
+   
 }
 
 function read(reservation_id) {
@@ -18,6 +18,7 @@ function read(reservation_id) {
 function create(newReservation) {
     return knex(tableName).insert(newReservation).returning("*").then((createdRecords) => createdRecords[0])
 }
+
 
 
 

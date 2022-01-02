@@ -14,7 +14,7 @@ const validProperties = [
   "people",
 ];
 
-async function reservationExists(req, res, next) {
+ async function reservationExists(req, res, next) {
   const reservation = await service.read(req.params.reservationId);
 
   if (reservation) {
@@ -114,9 +114,13 @@ async function read(req, res) {
 }
 
 async function create(req, res, next) {
-  const data = await service.create(req.body.data);
-
-  res.status(201).json({ data });
+  if(req.body.data) {
+    req.body = req.body.data
+  } 
+  const data = req.body
+  const newReservation = await service.create(data);
+  console.log(JSON.stringify(newReservation))
+  res.status(201).json({ data: newReservation });
 }
 
 module.exports = {
@@ -128,4 +132,5 @@ module.exports = {
     isValidDayOfWeek,
     asyncErrorBoundary(create),
   ],
+  reservationExists
 };
