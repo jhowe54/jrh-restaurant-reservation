@@ -71,15 +71,21 @@ let days = [
   }
   const data = req.body; 
   const reservationDate = new Date(`${data.reservation_date} ${data.reservation_time}`);
-  let dayName = days[reservationDate.getDay()]
+  let dayofWeek = days[reservationDate.getDay()]
+  let timeOfDay = data.reservation_time;
+  
   if(reservationDate < new Date() ) {
     return next({status: 400, message: "Reservations can only be created for a future date and may not be on tuesdays"})
   }
-  if(dayName === "Tuesday") {
+  if(dayofWeek === "Tuesday") {
     return next({status: 400, message: "Restaurant is closed on tuesdays"})
+  }
+  if(timeOfDay >= "21:30" || timeOfDay <= "10:30") {
+    return next({status: 400, message: "Reservations must be between 10:30am and 9:30pm "})
   }
    next()
 }
+
 
 const hasRequiredProperties = hasProperties(
   "first_name",
