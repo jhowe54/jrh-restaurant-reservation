@@ -71,9 +71,32 @@ export async function listReservations(params, signal) {
 export async function listTables(signal) {
   const url = `${API_BASE_URL}/tables`;
   const options = {
+    method: "GET",
     headers,
     signal
   }
   return await fetchJson(url, options)
     
+}
+
+export async function createTable(newTable, signal) {
+  const url = `${API_BASE_URL}/tables`;
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify(newTable),
+    signal,
+  };
+  return await fetchJson(url, options, newTable)
+}
+
+export async function updateTable(updatedTable, signal) {
+  const url = `${API_BASE_URL}/tables/${updatedTable.table_id}`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify(updatedTable),
+    signal
+  }
+  return await fetchJson(url, options, updatedTable)
 }
