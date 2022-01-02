@@ -1,26 +1,18 @@
 [
     {
-        "table_name": "Patio 1",
-        "capacity": 4
+        "table_name": "Bar #1",
+        "capacity": 1
     },
     {
-        "table_name": "Patio 2",
+        "table_name": "Bar #2",
+        "capacity": 1
+    },
+    {
+        "table_name": "#1",
         "capacity": 6
     },
     {
-        "table_name": "Patio 3",
-        "capacity": 3
-    },
-    {
-        "table_name": "Main 1",
-        "capacity": 4
-    },
-    {
-        "table_name": "Main 2",
+        "table_name": "#2",
         "capacity": 6
-    },
-    {
-        "table_name": "Main 3",
-        "capacity": 3
-    }     
+    }    
 ]
