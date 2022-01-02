@@ -2,8 +2,8 @@
 const knex = require("../db/connection");
 const tableName = "tables";
 
-function create(newTable) {
-    return knex(tableName).insert(newTable).returning("*").then((createdRecords) => createdRecords[0])
+async function create(newTable) {
+    return await knex(tableName).insert(newTable).returning("*").then((createdRecords) => createdRecords[0])
 }
 function list() {
     return knex(tableName).select("*").orderBy("table_name", "asc")
