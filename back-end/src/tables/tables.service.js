@@ -25,6 +25,13 @@ function getReservation(reservation_id) {
     return knex("reservations").select("*").where({ reservation_id }).first()
 }
 
+function clearTable(updatedTable) {
+    return knex(tablesName)
+    .select("*")
+    .where({ table_id: updatedTable.table_id })
+    .update(updatedTable, "*")
+    .then((updatedRecords) => updatedRecords[0])
+}
 
 module.exports = {
     create,
@@ -32,5 +39,6 @@ module.exports = {
     update,
     read,
     getReservation,
+    clearTable
    
 }
