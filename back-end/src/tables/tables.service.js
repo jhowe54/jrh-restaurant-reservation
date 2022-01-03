@@ -1,30 +1,36 @@
 
 const knex = require("../db/connection");
-const tableName = "tables";
+const tablesName = "tables";
 
 async function create(newTable) {
-    return await knex(tableName).insert(newTable).returning("*").then((createdRecords) => createdRecords[0])
+    return await knex(tablesName).insert(newTable).returning("*").then((createdRecords) => createdRecords[0])
 }
 function list() {
-    return knex(tableName).select("*").orderBy("table_name", "asc")
+    return knex(tablesName).select("*").orderBy("table_name", "asc")
 }
 
-async function update(existingTable) {
-    return await knex(tableName).select("*").where({table_id: existingTable.table_id}).update(existingTable, "*").then((updatedRecords) => updatedRecords[0])
+  function update(updatedTable) {
+    return knex(tablesName)
+    .select("*")
+    .where({ table_id: updatedTable.table_id })
+    .update(updatedTable, "*")
+    .then((updatedRecords) => updatedRecords[0])
 }
 
 function read(table_id) {
-    return knex(tableName).select("*").where({table_id}).first()
+    return knex(tablesName).select("*").where({table_id}).first()
 }
 
-function getReservationCapacity(reservation_id) {
-    return knex("reservations").select("*").where({reservation_id}).first()
+function getReservation(reservation_id) {
+    return knex("reservations").select("*").where({ reservation_id }).first()
 }
+
 
 module.exports = {
     create,
     list,
     update,
     read,
-    getReservationCapacity
+    getReservation,
+   
 }
