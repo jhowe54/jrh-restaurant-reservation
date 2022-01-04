@@ -19,6 +19,16 @@ function create(newReservation) {
     return knex(tableName).insert(newReservation).returning("*").then((createdRecords) => createdRecords[0])
 }
 
+function seatReservation(reservation) {
+    return knex(tableName)
+    .select("*")
+    .where({reservation_id: reservation.reservation_id})
+    .update(reservation, "*")
+    .then((updatedRecords) => updatedRecords[0])
+}
+
+
+
 
 
 
@@ -26,4 +36,5 @@ module.exports = {
     list,
     read, 
     create,
+    seatReservation
 }
