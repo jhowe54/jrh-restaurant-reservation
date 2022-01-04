@@ -116,7 +116,10 @@ const hasRequiredProperties = hasProperties(
   "people"
 );
 
-async function list(req, res) {
+async function list(req, res, next) {
+  if(req.query.mobile_number) {
+    return next()
+  }
   const { date } = req.query;
   const data = await service.list(date);
   data.forEach((reservation) => {
@@ -127,6 +130,14 @@ async function list(req, res) {
   res.status(200).json({ data });
 }
 
+async function listByPhone(req, res) {
+  const { mobile_number} = req.query;
+  const data = await service.search(mobile_number);
+  if(!data) {
+    return next({status: 404, message: "No reservation found"})
+  }
+  res.json({ data })
+}
 
 
 async function read(req, res) {
@@ -155,8 +166,14 @@ async function updateStatus(req, res) {
   res.json({ data });
 }
 
+
+async function searchByPhone(req, res) {
+  const data = req.body.data
+  res.json({ data })
+}
+
 module.exports = {
-  list,
+  list: [list, listByPhone],
   read: [asyncErrorBoundary(reservationExists), read],
   create: [
     hasValidProperties,
@@ -165,5 +182,5 @@ module.exports = {
     isValidDayOfWeek,
     asyncErrorBoundary(create),
   ],
-  update: [reservationExists, hasValidStatus, updateStatus ]
+  update: [reservationExists, hasValidStatus, updateStatus ],
 };
