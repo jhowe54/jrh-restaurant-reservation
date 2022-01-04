@@ -108,7 +108,7 @@ async function updateResStatusSeated(req, res, next) {
     ...res.locals.reservation,
     status: "seated",
   };
-  await reservationService.seatReservation(updatedReservation);
+  await reservationService.updateReservation(updatedReservation);
   next();
 }
 
@@ -142,7 +142,7 @@ async function clearTable(req, res) {
     ...reservation,
     status: "finished",
   };
-  await reservationService.seatReservation(updatedReservation);
+  await reservationService.updateReservation(updatedReservation);
   const data = await service.update(updatedTable);
 
   res.json({ data });

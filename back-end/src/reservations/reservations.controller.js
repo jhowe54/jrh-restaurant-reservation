@@ -95,12 +95,13 @@ let days = [
 }
 
 function hasValidStatus(req, res, next) {
+  console.log("LAST TEST", req.body)
   const { data } = req.body;
   //if current reservation status is already "finished" then it cannot be updated
   if(res.locals.reservation.status === "finished") {
     return next({status: 400, message: "A finished reservation cannot be updated"})
   }
-  const validStatuses = ["booked", "seated", "finished"]
+  const validStatuses = ["booked", "seated", "finished", "cancelled"]
   if(!validStatuses.includes(data.status)) {
     return next({status: 400, message: "Received unknown status"})
   }
@@ -151,7 +152,6 @@ async function create(req, res, next) {
   } 
   const data = req.body
   const newReservation = await service.create(data);
-  console.log(JSON.stringify(newReservation))
   res.status(201).json({ data: newReservation });
 }
 
@@ -161,16 +161,22 @@ async function updateStatus(req, res) {
     ...res.locals.reservation,
     status: req.body.data.status
   }
-  const data = await service.seatReservation(updatedReservation);
+  const data = await service.updateReservation(updatedReservation);
+  //toDo: update the reservation status to seated when a table is assigned a reservation id 
+  res.json({ data });
+}
+
+async function updateReservation(req, res) {
+  
+  const updatedReservation = {
+    ...req.body.data
+  }
+  const data = await service.updateReservation(updatedReservation);
   //toDo: update the reservation status to seated when a table is assigned a reservation id 
   res.json({ data });
 }
 
 
-async function searchByPhone(req, res) {
-  const data = req.body.data
-  res.json({ data })
-}
 
 module.exports = {
   list: [list, listByPhone],
@@ -182,5 +188,7 @@ module.exports = {
     isValidDayOfWeek,
     asyncErrorBoundary(create),
   ],
-  update: [reservationExists, hasValidStatus, updateStatus ],
+  updateStatus: [reservationExists, hasValidStatus, updateStatus ],
+  updateReservation: [reservationExists, hasValidProperties, updateReservation]
+  
 };
