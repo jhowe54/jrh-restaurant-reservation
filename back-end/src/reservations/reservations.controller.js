@@ -33,6 +33,8 @@ const timeIsTime = /[0-9]{2}:[0-9]{2}/;
 
 async function hasValidProperties(req, res, next) {
   const { data = {} } = req.body;
+  console.log(req.body)
+  
   if (!data) {
     return next({ status: 400, message: "Requires request data" });
   }
@@ -50,6 +52,7 @@ async function hasValidProperties(req, res, next) {
       return next({ status: 400, message: `Requires ${field} to be a properly formatted time`})
     }
   });
+ 
   next();
 }
 
@@ -83,6 +86,7 @@ let days = [
   if(timeOfDay >= "21:30" || timeOfDay <= "10:30") {
     return next({status: 400, message: "Reservations must be between 10:30am and 9:30pm "})
   }
+  
    next()
 }
 
@@ -91,11 +95,11 @@ let days = [
   if(data.status === "seated" || data.status ==="finished") {
     return next({status:400, message: "New reservations cannot start with a status of seated or finished"})
   }
+
   next()
 }
 
 function hasValidStatus(req, res, next) {
-  console.log("LAST TEST", req.body)
   const { data } = req.body;
   //if current reservation status is already "finished" then it cannot be updated
   if(res.locals.reservation.status === "finished") {
@@ -147,11 +151,8 @@ async function read(req, res) {
 }
 
 async function create(req, res, next) {
-  if(req.body.data) {
-    req.body = req.body.data
-  } 
-  const data = req.body
-  const newReservation = await service.create(data);
+  
+  const newReservation = await service.create(req.body);
   res.status(201).json({ data: newReservation });
 }
 
