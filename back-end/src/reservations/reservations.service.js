@@ -7,8 +7,6 @@ function list(date) {
     .andWhereNot({ status: "cancelled"})
     .andWhere({ "reservation_date" : date})
     .orderBy("reservation_time", "asc")
-    .then()
-   
 }
 
 function read(reservation_id) {
