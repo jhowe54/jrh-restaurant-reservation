@@ -79,6 +79,20 @@ export async function createReservation(newReservation, signal) {
   return await fetchJson(url, options, newReservation)
 }
 
+export async function readReservation(reservationId, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservationId}`;
+  console.log(url)
+  const options = {
+    method: "GET",
+    headers,
+    signal
+  }
+  return await fetchJson(url, options)
+    
+}
+
+
+
 export async function listTables(signal) {
   const url = `${API_BASE_URL}/tables`;
   const options = {
@@ -95,19 +109,43 @@ export async function createTable(newTable, signal) {
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify(newTable),
+    body: JSON.stringify({data: newTable}),
     signal,
   };
   return await fetchJson(url, options, newTable)
 }
 
-export async function updateTable(updatedTable, signal) {
-  const url = `${API_BASE_URL}/tables/${updatedTable.table_id}`;
+/* export async function updateTable(updatedTable, signal) {
+  const url = `${API_BASE_URL}/tables/${updatedTable.table_id}/seat`;
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify(updatedTable),
+    body: JSON.stringify({data: updatedTable}),
     signal
   }
   return await fetchJson(url, options, updatedTable)
+} */
+
+
+export async function seatTable(reservationId, tableId, signal) {
+  const url = `${API_BASE_URL}/tables/${tableId}/seat`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: {'reservation_id': Number(reservationId) }}),
+    signal
+  }
+  return await fetchJson(url, options)
+}
+
+export async function readTable(tableId, signal) {
+  const url = `${API_BASE_URL}/tables/${tableId}`;
+  console.log(url)
+  const options = {
+    method: "GET",
+    headers,
+    signal
+  }
+  return await fetchJson(url, options)
+    
 }

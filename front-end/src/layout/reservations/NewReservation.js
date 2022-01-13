@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { createReservation } from "../../utils/api";
 import ReservationForm from "./ReservationForm";
 function NewReservation() {
-
   const history = useHistory();
   const initialFormState = {
     first_name: "",
@@ -11,33 +10,38 @@ function NewReservation() {
     mobile_number: "",
     reservation_date: "",
     reservation_time: "",
-    people: ""
+    people: "",
   };
 
   const [formData, setFormData] = useState(initialFormState);
-  const [postResError, setPostResError] = useState(null);
-  
+  const [postResError, setPostResError] = useState(false);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newReservationDate = formData.reservation_date;
-    formData.people = Number(formData.people)
-    await createReservation(formData).then(setFormData(initialFormState)).catch((err) => setPostResError(err));
-    if(postResError) {
-        console.log(postResError)
+    setPostResError(null);
+    formData.people = Number(formData.people);
+
+    try {
+      await createReservation(formData);
+      setFormData(initialFormState);
+      history.push(`/dashboard?date=${newReservationDate}`);
+    } catch (error) {
+      setPostResError(error);
     }
-    history.push(`/dashboard?date=${newReservationDate}`)
   };
 
   const handleChange = (event) => {
-    event.preventDefault()
-    setPostResError("")
-    setFormData((currentReservation) => ({
-      ...currentReservation,
+    event.preventDefault();
+    setPostResError("");
+    setFormData((newReservation) => ({
+      ...newReservation,
       [event.target.name]: event.target.value,
     }));
   };
 
-  
+ 
+
   return (
     <>
       <h1> Create New Reservation</h1>

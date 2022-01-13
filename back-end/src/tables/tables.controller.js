@@ -69,8 +69,7 @@ const hasResId = hasProperties("reservation_id");
 
  function validTable(req, res, next) {
   const { table: data } = res.locals;
-  const { reservation: resData } = res.locals;
-
+  const  {reservation: resData}  = res.locals
   if (data.capacity < resData.people) {
     return next({ status: 400, message: "Insufficient capacity" });
   }

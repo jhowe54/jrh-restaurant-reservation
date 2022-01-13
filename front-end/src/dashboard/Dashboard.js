@@ -1,7 +1,9 @@
 import React, { useEffect, useState, } from "react";
 import useQuery from "../utils/useQuery";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import ReservationDisplay from "../layout/reservations/ReservationDisplay";
+import TableDisplay from "../layout/tables/TableDisplay";
 
 //test
 /**
@@ -12,6 +14,7 @@ import ErrorAlert from "../layout/ErrorAlert";
  */
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
+  const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const query = useQuery();
   const dateQ = query.get("date")
@@ -31,6 +34,25 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
+
+ 
+  useEffect(() => {
+    const abortController = new AbortController();
+    async function loadTables() {
+      try {
+        const response = await listTables();
+        setTables(response);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          throw err
+        }
+      }
+    }
+    loadTables();
+    return () => abortController.abort();
+  }, []);
+
+  
   return (
     <main>
       <h1>Dashboard</h1>
@@ -38,7 +60,8 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservations for date</h4>
       </div>
       <ErrorAlert error={reservationsError} />
-      {JSON.stringify(reservations)}
+      <ReservationDisplay reservations={reservations} />
+      <TableDisplay tables={tables} />
     </main>
   );
 }

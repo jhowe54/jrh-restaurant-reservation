@@ -27,13 +27,13 @@ const validProperties = [
   });
 }
 
-const dateIsDate = /[0-9]{4}-[0-9]{2}-[0-9]{2}/;
-const timeIsTime = /[0-9]{2}:[0-9]{2}/;
+const dateIsFormatted = /[0-9]{4}-[0-9]{2}-[0-9]{2}/;
+const timeIsFormatted = /[0-9]{2}:[0-9]{2}/;
 
 
 async function hasValidProperties(req, res, next) {
   const { data = {} } = req.body;
-  console.log(req.body)
+  
   
   if (!data) {
     return next({ status: 400, message: "Requires request data" });
@@ -45,10 +45,10 @@ async function hasValidProperties(req, res, next) {
     if (field === "people" && !Number.isInteger(data.people)) {
       return next({ status: 400, message: `Requires ${field} to be a number` });
     }
-    if(field === "reservation_date" && !dateIsDate.test(data.reservation_date)) {
+    if(field === "reservation_date" && !dateIsFormatted.test(data.reservation_date)) {
       return next({ status: 400, message: `Requires ${field} to be a properly formatted date`})
     }
-    if(field === "reservation_time" && !timeIsTime.test(data.reservation_time)) {
+    if(field === "reservation_time" && !timeIsFormatted.test(data.reservation_time)) {
       return next({ status: 400, message: `Requires ${field} to be a properly formatted time`})
     }
   });
@@ -77,8 +77,11 @@ let days = [
   let dayofWeek = days[reservationDate.getDay()]
   let timeOfDay = data.reservation_time;
   
-  if(reservationDate < new Date() ) {
+  if(reservationDate < new Date() && dayofWeek === "tuesday" ) {
     return next({status: 400, message: "Reservations can only be created for a future date and may not be on tuesdays"})
+  }
+  if(reservationDate < new Date() ) {
+    return next({status: 400, message: "Reservations can only be created for a future date"})
   }
   if(dayofWeek === "Tuesday") {
     return next({status: 400, message: "Restaurant is closed on tuesdays"})

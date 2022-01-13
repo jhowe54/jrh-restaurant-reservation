@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../ErrorAlert"
 function ReservationForm({ handleChange, handleSubmit, formData, postResError, handlePeopleChange, people }) {
