@@ -81,7 +81,7 @@ export async function createReservation(newReservation, signal) {
 
 export async function readReservation(reservationId, signal) {
   const url = `${API_BASE_URL}/reservations/${reservationId}`;
-  console.log(url)
+  
   const options = {
     method: "GET",
     headers,
@@ -91,7 +91,15 @@ export async function readReservation(reservationId, signal) {
     
 }
 
-
+export async function searchReservations(mobile_number, signal) {
+  const url = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
+  const options ={
+    method: "GET",
+    headers,
+    signal
+  }
+  return await fetchJson(url, options)
+}
 
 export async function listTables(signal) {
   const url = `${API_BASE_URL}/tables`;

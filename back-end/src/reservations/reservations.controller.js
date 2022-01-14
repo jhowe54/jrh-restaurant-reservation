@@ -138,11 +138,13 @@ async function list(req, res, next) {
   res.status(200).json({ data });
 }
 
-async function listByPhone(req, res) {
+async function listByPhone(req, res, next) {
+  
   const { mobile_number} = req.query;
   const data = await service.search(mobile_number);
+
   if(!data) {
-    return next({status: 404, message: "No reservation found"})
+    return next({status: 404, message: "No reservations found"})
   }
   res.json({ data })
 }

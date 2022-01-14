@@ -19,10 +19,12 @@ function Dashboard({ date }) {
 
   const query = useQuery();
   const dateQ = query.get("date");
+  
 
   if (dateQ) {
     date = dateQ;
   }
+ 
 
   useEffect(loadDashboard, [date]);
 
