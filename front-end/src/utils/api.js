@@ -115,7 +115,7 @@ export async function createTable(newTable, signal) {
   return await fetchJson(url, options, newTable)
 }
 
-/* export async function updateTable(updatedTable, signal) {
+ export async function updateTable(updatedTable, signal) {
   const url = `${API_BASE_URL}/tables/${updatedTable.table_id}/seat`;
   const options = {
     method: "PUT",
@@ -124,19 +124,33 @@ export async function createTable(newTable, signal) {
     signal
   }
   return await fetchJson(url, options, updatedTable)
-} */
+} 
 
 
-export async function seatTable(reservationId, tableId, signal) {
+export async function clearTable(updatedTable, signal) {
+  const url = `${API_BASE_URL}/tables/${updatedTable.table_id}/seat`;
+  const options = {
+    method: "DELETE",
+    headers,
+    body: JSON.stringify({data: updatedTable}),
+    signal
+  }
+  return await fetchJson(url, options, updatedTable)
+} 
+
+
+export async function seatTable(reservation_id, tableId, signal) {
   const url = `${API_BASE_URL}/tables/${tableId}/seat`;
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({data: {'reservation_id': Number(reservationId) }}),
+    body: JSON.stringify({ data: { reservation_id } }),
     signal
   }
   return await fetchJson(url, options)
 }
+
+
 
 export async function readTable(tableId, signal) {
   const url = `${API_BASE_URL}/tables/${tableId}`;

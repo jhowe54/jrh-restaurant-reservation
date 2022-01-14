@@ -40,8 +40,6 @@ function NewReservation() {
     }));
   };
 
- 
-
   return (
     <>
       <h1> Create New Reservation</h1>

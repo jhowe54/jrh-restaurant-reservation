@@ -1,9 +1,14 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import ErrorAlert from "../ErrorAlert"
-function ReservationForm({ handleChange, handleSubmit, formData, postResError, handlePeopleChange, people }) {
+import ErrorAlert from "../ErrorAlert";
+function ReservationForm({
+  handleChange,
+  handleSubmit,
+  formData,
+  postResError,
+}) {
   const history = useHistory();
-  
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -83,10 +88,10 @@ function ReservationForm({ handleChange, handleSubmit, formData, postResError, h
               placeholder="party size"
               value={formData.people}
             />
-          </div>   
+          </div>
         </fieldset>
         <button type="submit">Submit</button>
-        <button type="button" onClick={() => history.push('/')}>
+        <button type="button" onClick={() => history.push("/")}>
           Cancel
         </button>
       </form>

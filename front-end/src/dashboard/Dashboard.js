@@ -1,6 +1,6 @@
-import React, { useEffect, useState, } from "react";
+import React, { useEffect, useState } from "react";
 import useQuery from "../utils/useQuery";
-import { listReservations, listTables } from "../utils/api";
+import { listReservations, listTables, clearTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationDisplay from "../layout/reservations/ReservationDisplay";
 import TableDisplay from "../layout/tables/TableDisplay";
@@ -16,11 +16,12 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+
   const query = useQuery();
-  const dateQ = query.get("date")
-  
-  if(dateQ) {
-    date = dateQ
+  const dateQ = query.get("date");
+
+  if (dateQ) {
+    date = dateQ;
   }
 
   useEffect(loadDashboard, [date]);
@@ -28,31 +29,30 @@ function Dashboard({ date }) {
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
+    listTables(abortController.signal).then(setTables);
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
-    return () => abortController.abort();
   }
 
-
- 
-  useEffect(() => {
+  const handleClear = async (table) => {
     const abortController = new AbortController();
-    async function loadTables() {
-      try {
-        const response = await listTables();
-        setTables(response);
-      } catch (err) {
-        if (err.name !== "AbortError") {
-          throw err
-        }
-      }
-    }
-    loadTables();
-    return () => abortController.abort();
-  }, []);
 
-  
+    try {
+      if (window.confirm("Is this table ready to seat new guests?")) {
+        await clearTable(table, abortController.signal);
+        loadDashboard();
+      }
+      loadDashboard();
+    } catch (err) {
+      if (err.name !== "AbortError") {
+        setReservationsError(err);
+      }
+      console.log("Abort");
+    }
+    return () => abortController.abort();
+  };
+
   return (
     <main>
       <h1>Dashboard</h1>
@@ -61,7 +61,7 @@ function Dashboard({ date }) {
       </div>
       <ErrorAlert error={reservationsError} />
       <ReservationDisplay reservations={reservations} />
-      <TableDisplay tables={tables} />
+      <TableDisplay tables={tables} handleClear={handleClear} />
     </main>
   );
 }
