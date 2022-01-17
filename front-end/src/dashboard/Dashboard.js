@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import useQuery from "../utils/useQuery";
-import { listReservations, listTables, clearTable } from "../utils/api";
+import {
+  listReservations,
+  listTables,
+  clearTable,
+  changeResStatus,
+} from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationDisplay from "../layout/reservations/ReservationDisplay";
 import TableDisplay from "../layout/tables/TableDisplay";
@@ -19,12 +24,10 @@ function Dashboard({ date }) {
 
   const query = useQuery();
   const dateQ = query.get("date");
-  
 
   if (dateQ) {
     date = dateQ;
   }
- 
 
   useEffect(loadDashboard, [date]);
 
@@ -55,6 +58,27 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   };
 
+  const handleCancel = async (resId) => {
+    const abortController = new AbortController();
+    const status = { status: "cancelled" };
+    try {
+      if (
+        window.confirm(
+          "Do you want to cancel this reservation? This cannot be undone."
+        )
+      ) {
+        await changeResStatus(resId, status, abortController.signal);
+        loadDashboard();
+      }
+    } catch (err) {
+      if (err.name !== "AbortError") {
+        setReservationsError(err);
+      }
+      console.log("Abort");
+    }
+    return () => abortController.abort();
+  };
+
   return (
     <main>
       <h1>Dashboard</h1>
@@ -62,7 +86,10 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservations for date</h4>
       </div>
       <ErrorAlert error={reservationsError} />
-      <ReservationDisplay reservations={reservations} />
+      <ReservationDisplay
+        reservations={reservations}
+        handleCancel={handleCancel}
+      />
       <TableDisplay tables={tables} handleClear={handleClear} />
     </main>
   );

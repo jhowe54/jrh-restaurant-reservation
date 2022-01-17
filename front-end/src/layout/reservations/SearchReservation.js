@@ -1,43 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { listReservations, searchReservations } from "../../utils/api";
-import { useHistory, useParams, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { searchReservations, changeResStatus } from "../../utils/api";
 import ErrorAlert from "../ErrorAlert";
-import useQuery from "../../utils/useQuery"
 import ReservationDisplay from "./ReservationDisplay";
 function SearchReservations() {
- 
-const [errors, setErrors] = useState(null)
-const [currentNumber, setCurrentNumber] = useState({currentNumber: ""})
-const [matchingReservations, setMatchingReservations] = useState([])
+  const [errors, setErrors] = useState(null);
+  const [currentNumber, setCurrentNumber] = useState({ currentNumber: "" });
+  const [matchingReservations, setMatchingReservations] = useState([]);
 
+  const handleChange = (event) => {
+    event.preventDefault();
+    setCurrentNumber(event.target.value);
+  };
 
-const handleChange = (event) => {
-     event.preventDefault();
-     setCurrentNumber(event.target.value)
-     
- }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const abortController = new AbortController();
+    try {
+      const response = await searchReservations(
+        currentNumber,
+        abortController.signal
+      );
 
- const handleSubmit = async (event) => {
-   event.preventDefault()
-  const abortController = new AbortController();
-   try {
-     const response = await searchReservations(currentNumber, abortController.signal)
-     
-     setMatchingReservations(response);
-   } catch(err) {
-     if(err.name !== "AbortError") {
-       setErrors(err)
-     } 
-     console.log("Aborted")
-   }
-   return () => abortController.abort()
- }
+      setMatchingReservations(response);
+    } catch (err) {
+      if (err.name !== "AbortError") {
+        setErrors(err);
+      }
+      console.log("Aborted");
+    }
+    return () => abortController.abort();
+  };
 
- 
+  const handleCancel = async (resId) => {
+    const abortController = new AbortController();
+    const status = { status: "cancelled" };
+    try {
+      if (
+        window.confirm(
+          "Do you want to cancel this reservation? This cannot be undone."
+        )
+      ) {
+        await changeResStatus(resId, status, abortController.signal);
+        const response = await searchReservations(
+          currentNumber,
+          abortController.signal
+        );
+        setMatchingReservations(response);
+      }
+    } catch (err) {
+      if (err.name !== "AbortError") {
+        setErrors(err);
+      }
+      console.log("Aborted");
+    }
+    return () => abortController.abort();
+  };
+
   return (
-      <div>
-          <ErrorAlert error={errors} />
-          <form onSubmit={handleSubmit}>
+    <div>
+      <ErrorAlert error={errors} />
+      <form onSubmit={handleSubmit}>
         <fieldset>
           <input
             type="search"
@@ -48,14 +70,15 @@ const handleChange = (event) => {
         </fieldset>
         <button type="submit">Find</button>
       </form>
-      {matchingReservations.length ? <ReservationDisplay reservations={matchingReservations} /> :
-      "No reservations found"
-      }
-      
-      </div>
-
-
-      
+      {matchingReservations && matchingReservations.length ? (
+        <ReservationDisplay
+          reservations={matchingReservations}
+          handleCancel={handleCancel}
+        />
+      ) : (
+        "No reservations found"
+      )}
+    </div>
   );
 }
 
