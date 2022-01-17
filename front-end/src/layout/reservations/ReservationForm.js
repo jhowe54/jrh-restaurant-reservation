@@ -11,10 +11,11 @@ function ReservationForm({
 
   return (
     <>
+    <ErrorAlert error={postResError} />
       <form onSubmit={handleSubmit}>
         <fieldset>
           <legend>Create a New Reservation</legend>
-          <ErrorAlert error={postResError} />
+          
           <div className="item">
             <label htmlFor="first_name">First Name:</label>
             <input
@@ -23,7 +24,6 @@ function ReservationForm({
               onChange={handleChange}
               type="text"
               name="first_name"
-              autoFocus="on"
               required
               placeholder="first name"
               value={formData.first_name}

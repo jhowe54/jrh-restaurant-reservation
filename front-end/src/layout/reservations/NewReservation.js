@@ -33,7 +33,6 @@ function NewReservation() {
 
   const handleChange = (event) => {
     event.preventDefault();
-    setPostResError("");
     setFormData((newReservation) => ({
       ...newReservation,
       [event.target.name]: event.target.value,

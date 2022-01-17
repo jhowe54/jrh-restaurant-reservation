@@ -77,6 +77,7 @@ let days = [
 ];
 
 function isValidDayOfWeek(req, res, next) {
+  console.log(req.body.data)
   if (req.body.data) {
     req.body = req.body.data;
   }
@@ -197,7 +198,7 @@ async function updateStatus(req, res) {
 
 async function updateReservation(req, res) {
   const updatedReservation = {
-    ...req.body.data,
+    ...req.body,
   };
   const data = await service.updateReservation(updatedReservation);
   //toDo: update the reservation status to seated when a table is assigned a reservation id
@@ -215,5 +216,5 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   updateStatus: [reservationExists, hasValidStatus, updateStatus],
-  updateReservation: [reservationExists, hasValidProperties, updateReservation],
+  updateReservation: [reservationExists, hasValidProperties, isValidDayOfWeek, asyncErrorBoundary(updateReservation)],
 };

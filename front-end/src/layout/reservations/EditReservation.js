@@ -36,14 +36,11 @@ function EditReservation() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const newReservationDate = reservationData.reservation_date;
-    setUpdateError(null);
-    reservationData.people = Number(reservationData.people);
-
+   
     try {
       await updateReservation(reservationData);
       setReservationData({});
-      history.push(`/dashboard?date=${newReservationDate}`);
+      history.push(`/dashboard?date=${reservationData.reservation_date}`);
     } catch (error) {
       setUpdateError(error);
     }
