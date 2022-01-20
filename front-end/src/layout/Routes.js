@@ -21,19 +21,19 @@ function Routes() {
   const[date, setDate] = useState(today())
   return (
     <Switch>
-      <Route exact path="/">
+      <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
       </Route>
-      <Route exact path="/reservations">
+      <Route exact={true} path="/reservations">
         <Redirect to={"/dashboard"} />
       </Route>
       <Route path="/dashboard">
         <Dashboard date={date} setDate={setDate} />
       </Route>
-      <Route exact path="/search">
+      <Route exact={true} path="/search">
         <SearchReservation />
       </Route>
-      <Route exact path="/reservations/new">
+      <Route exact={true} path="/reservations/new">
         <NewReservation />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
@@ -42,7 +42,7 @@ function Routes() {
       <Route path="/reservations/:reservation_id/edit">
         <EditReservation />
       </Route>
-      <Route exact path="/tables/new">
+      <Route exact={true} path="/tables/new">
         <NewTable />
       </Route>
       <Route>
