@@ -9,8 +9,6 @@ function ReservationForm({
   const history = useHistory();
   
   return (
-    
-    
       <form onSubmit={handleSubmit}>
         <fieldset>
           <legend>Reservation Form</legend>
