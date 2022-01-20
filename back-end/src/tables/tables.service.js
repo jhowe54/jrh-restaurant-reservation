@@ -1,16 +1,16 @@
 
 const knex = require("../db/connection");
-const tablesName = "tables";
+const tableName = "tables";
 
 async function create(newTable) {
-    return await knex(tablesName).insert(newTable).returning("*").then((createdRecords) => createdRecords[0])
+    return await knex(tableName).insert(newTable).returning("*").then((createdRecords) => createdRecords[0])
 }
 function list() {
-    return knex(tablesName).select("*").orderBy("table_name", "asc")
+    return knex(tableName).select("*").orderBy("table_name", "asc")
 }
 
-  function update(updatedTable) {
-    return knex(tablesName)
+  async function update(updatedTable) {
+    return await knex(tableName)
     .select("*")
     .where({ table_id: updatedTable.table_id })
     .update(updatedTable, "*")
@@ -18,15 +18,15 @@ function list() {
 }
 
 function read(table_id) {
-    return knex(tablesName).select("*").where({table_id}).first()
+    return knex(tableName).select("*").where({table_id}).first()
 }
 
 function getReservation(reservation_id) {
     return knex("reservations").select("*").where({ reservation_id }).first()
 }
 
-function clearTable(updatedTable) {
-    return knex(tablesName)
+async function clearTable(updatedTable) {
+    return await knex(tableName)
     .select("*")
     .where({ table_id: updatedTable.table_id })
     .update(updatedTable, "*")

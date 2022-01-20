@@ -1,20 +1,19 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import ErrorAlert from "../ErrorAlert";
+
 function ReservationForm({
   handleChange,
   handleSubmit,
   formData,
-  postResError,
 }) {
   const history = useHistory();
-
+  
   return (
-    <>
-    <ErrorAlert error={postResError} />
+    
+    
       <form onSubmit={handleSubmit}>
         <fieldset>
-          <legend>Create a New Reservation</legend>
+          <legend>Reservation Form</legend>
           
           <div className="item">
             <label htmlFor="first_name">First Name:</label>
@@ -30,7 +29,7 @@ function ReservationForm({
             />
           </div>
           <div className="item">
-            <label htmlFor="last_name">last_name:</label>
+            <label htmlFor="last_name">Last Name:</label>
             <input
               id="last_name"
               onChange={handleChange}
@@ -66,7 +65,7 @@ function ReservationForm({
             />
           </div>
           <div className="item">
-            <label htmlFor="reservation_time">reservation_time:</label>
+            <label htmlFor="reservation_time">Reservation Time:</label>
             <input
               id="reservation_time"
               onChange={handleChange}
@@ -75,10 +74,11 @@ function ReservationForm({
               required
               placeholder="reservation_time"
               value={formData.reservation_time}
+              step="900"
             />
           </div>
           <div className="item">
-            <label htmlFor="people">party_size:</label>
+            <label htmlFor="people">Party Size:</label>
             <input
               id="people"
               onChange={handleChange}
@@ -87,15 +87,16 @@ function ReservationForm({
               required
               placeholder="party size"
               value={formData.people}
+              min={1}
             />
           </div>
         </fieldset>
-        <button type="submit">Submit</button>
-        <button type="button" onClick={() => history.push("/")}>
+        <button className="form-button btn btn-success" type="submit">Submit</button>
+        <button className="form-button btn btn-secondary" type="button" onClick={() => history.push("/")}>
           Cancel
         </button>
       </form>
-    </>
+    
   );
 }
 

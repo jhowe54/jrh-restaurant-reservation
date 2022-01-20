@@ -115,12 +115,7 @@ export async function readReservation(reservationId, signal) {
 
 export async function searchReservations(mobile_number, signal) {
   const url = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
-  const options ={
-    method: "GET",
-    headers,
-    signal
-  }
-  return await fetchJson(url, options)
+  return await fetchJson(url, {signal}).then(formatReservationDate).then(formatReservationTime)
 }
 
 export async function listTables(signal) {

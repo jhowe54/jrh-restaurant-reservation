@@ -3,12 +3,23 @@ import { useHistory, useParams } from "react-router-dom";
 import { formatAsDate } from "../../utils/date-time";
 import { readReservation, updateReservation } from "../../utils/api";
 import ReservationForm from "./ReservationForm";
+import ErrorAlert from "../ErrorAlert";
 
 function EditReservation() {
   const history = useHistory();
   const { reservation_id } = useParams();
-  const [reservationData, setReservationData] = useState({});
-  const [updateError, setUpdateError] = useState(false);
+  
+  let initialFormState = {
+    first_name: "",
+    last_name: "",
+    mobile_number: "",
+    reservation_date: "",
+    reservation_time: "",
+    people: "",
+  }
+  
+  const [reservationData, setReservationData] = useState(initialFormState);
+  const [updateError, setUpdateError] = useState(null);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -39,28 +50,29 @@ function EditReservation() {
    
     try {
       await updateReservation(reservationData);
-      setReservationData({});
       history.push(`/dashboard?date=${reservationData.reservation_date}`);
     } catch (error) {
       setUpdateError(error);
     }
   };
 
-  const handleChange = ({ target }) => {
+  const handleChange = (event) => {
+    event.preventDefault()
     setReservationData((currentReservation) => ({
       ...currentReservation,
-      [target.name]: target.value,
+      [event.target.name]: event.target.value,
     }));
   };
 
   return (
     <>
-      <h1> Create New Reservation</h1>
+      <h1> Edit Reservation</h1>
+      <ErrorAlert error={updateError} />
       <ReservationForm
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         formData={reservationData}
-        postResError={updateError}
+        
       />
     </>
   );

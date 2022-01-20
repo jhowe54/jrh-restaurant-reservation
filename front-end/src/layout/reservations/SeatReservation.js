@@ -39,8 +39,11 @@ function SeatReservation() {
           <select name="table_id" onChange={handleChange}>
             <TableSelect />
           </select>
+          <input type="submit" value={"Submit"} />
+          <input type="button" value={"Go Back"} onClick={() => history.goBack()} />
+          
         </fieldset>
-        <button type="submit">Seat</button>
+        
       </form>
     </div>
   );

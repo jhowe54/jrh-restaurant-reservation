@@ -37,15 +37,15 @@ function NewTable() {
       };
     
       return (
-        <>
-          <h1> Create New Reservation</h1>
+        <div className="form-container">
+          <h1> Create New Table</h1>
           <TableForm
             handleChange={handleChange}
             handleSubmit={handleSubmit}
             formData={formData}
             createTableError={createTableError}
           />
-        </>
+        </div>
       );
 }
 

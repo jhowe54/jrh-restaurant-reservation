@@ -77,7 +77,6 @@ let days = [
 ];
 
 function isValidDayOfWeek(req, res, next) {
-  console.log(req.body.data)
   if (req.body.data) {
     req.body = req.body.data;
   }
@@ -153,27 +152,14 @@ const hasRequiredProperties = hasProperties(
 );
 
 async function list(req, res, next) {
-  if (req.query.mobile_number) {
-    return next();
+  const { date, mobile_number } = req.query;
+  if (date) {
+    res.json({ data: await service.listDate(date) });
+  } else if (mobile_number) {
+    res.json({ data: await service.listPhone(mobile_number) });
+  } else {
+    res.json({ data: await service.list() });
   }
-  const { date } = req.query;
-  const data = await service.list(date);
-  data.forEach((reservation) => {
-    reservation.reservation_date = reservation.reservation_date
-      .toISOString()
-      .split("T")[0];
-  });
-  res.status(200).json({ data });
-}
-
-async function listByPhone(req, res, next) {
-  const { mobile_number } = req.query;
-  const data = await service.search(mobile_number);
-
-  if (!data) {
-    return next({ status: 404, message: "No reservations found" });
-  }
-  res.json({ data });
 }
 
 async function read(req, res) {
@@ -206,7 +192,7 @@ async function updateReservation(req, res) {
 }
 
 module.exports = {
-  list: [list, listByPhone],
+  list: [asyncErrorBoundary(list)],
   read: [asyncErrorBoundary(reservationExists), read],
   create: [
     hasValidProperties,
@@ -216,5 +202,10 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   updateStatus: [reservationExists, hasValidStatus, updateStatus],
-  updateReservation: [reservationExists, hasValidProperties, isValidDayOfWeek, asyncErrorBoundary(updateReservation)],
+  updateReservation: [
+    reservationExists,
+    hasValidProperties,
+    isValidDayOfWeek,
+    asyncErrorBoundary(updateReservation),
+  ],
 };

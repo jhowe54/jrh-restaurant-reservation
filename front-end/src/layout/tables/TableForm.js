@@ -7,7 +7,7 @@ function TableForm({handleChange, handleSubmit, formData, createTableError}) {
     const history = useHistory();
     
     return (
-        <>
+        
           <form onSubmit={handleSubmit}>
             <fieldset>
               <legend>Create a New Table</legend>
@@ -31,16 +31,17 @@ function TableForm({handleChange, handleSubmit, formData, createTableError}) {
                   type="number"
                   name="capacity"
                   required
+                  min={1}
                   value={formData.capacity}
                 />
               </div>
             </fieldset>
-            <button type="submit">Submit</button>
-            <button type="button" onClick={() => history.goBack()}>
+            <button type="submit" className="btn btn-success form-button">Submit</button>
+            <button type="button" className="btn btn-secondary form-button" onClick={() => history.goBack()}>
               Cancel
             </button>
           </form>
-        </>
+        
       );
 }
 

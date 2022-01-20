@@ -6,10 +6,11 @@ import {
   clearTable,
   changeResStatus,
 } from "../utils/api";
+import { next, previous, today } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationDisplay from "../layout/reservations/ReservationDisplay";
 import TableDisplay from "../layout/tables/TableDisplay";
-
+import { Link, useRouteMatch } from "react-router-dom";
 //test
 /**
  * Defines the dashboard page.
@@ -17,17 +18,24 @@ import TableDisplay from "../layout/tables/TableDisplay";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date }) {
+function Dashboard({ date, setDate }) {
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const route = useRouteMatch()
+  const q = useQuery();
 
-  const query = useQuery();
-  const dateQ = query.get("date");
-
-  if (dateQ) {
-    date = dateQ;
-  }
+  useEffect(() => {
+    function updateDate() {
+      const dateQ = q.get("date");
+      if (dateQ) {
+        setDate(dateQ);
+      } else {
+        setDate(today())
+      }
+    }
+    updateDate();
+  }, [q, setDate, route]);
 
   useEffect(loadDashboard, [date]);
 
@@ -82,8 +90,13 @@ function Dashboard({ date }) {
   return (
     <main>
       <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date</h4>
+      <div className="mb-3">
+        <h2 className="mb-0">{`Reservations for date: ${date}`}</h2>
+      </div>
+      <div className="date-button-container">
+          <Link className="btn btn-primary date-button" to={`/dashboard?date=${previous(date)}`}>Previous</Link>
+          <Link className="btn btn-primary date-button" to={`/dashboard?date=${today()}`}>Today</Link>
+          <Link className="btn btn-primary date-button" to={`/dashboard?date=${next(date)}`}>Next</Link>
       </div>
       <ErrorAlert error={reservationsError} />
       <ReservationDisplay

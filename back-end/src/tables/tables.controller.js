@@ -40,7 +40,7 @@ async function resExists(req, res, next) {
 
 const validProperties = ["table_name", "capacity"];
 
- function hasValidProperties(req, res, next) {
+function hasValidProperties(req, res, next) {
   const { data = {} } = req.body;
   if (!data) {
     return next({ status: 400, message: "Requires request data" });
@@ -55,7 +55,10 @@ const validProperties = ["table_name", "capacity"];
         message: `Requires ${field} to have a length greater than 1`,
       });
     }
-    if (field === "capacity" && !Number.isInteger(data.capacity)) {
+    if (
+      (field === "capacity" && data.capacity <= 0) ||
+      (field === "capacity" && !Number.isInteger(data.capacity))
+    ) {
       return next({
         status: 400,
         message: `Requires ${field} to be a number and it must be greater than 0`,
@@ -67,9 +70,9 @@ const validProperties = ["table_name", "capacity"];
 
 const hasResId = hasProperties("reservation_id");
 
- function validTable(req, res, next) {
+function validTable(req, res, next) {
   const { table: data } = res.locals;
-  const  {reservation: resData}  = res.locals
+  const { reservation: resData } = res.locals;
   if (data.capacity < resData.people) {
     return next({ status: 400, message: "Insufficient capacity" });
   }
@@ -80,7 +83,7 @@ const hasResId = hasProperties("reservation_id");
   next();
 }
 
- function notOccupied(req, res, next) {
+function notOccupied(req, res, next) {
   const table = res.locals.table;
 
   if (table.reservation_id) {
@@ -95,7 +98,7 @@ async function create(req, res) {
   res.status(201).json({ data: newTable });
 }
 
- function read(req, res) {
+function read(req, res) {
   const { table: data } = res.locals;
   res.json({ data });
 }
@@ -148,9 +151,9 @@ async function clearTable(req, res) {
 }
 
 module.exports = {
-  list,
-  read: [tableExists, read],
-  create: [hasValidProperties, create],
+  list: [asyncErrorBoundary(list)],
+  read: [asyncErrorBoundary(tableExists), read],
+  create: [hasValidProperties, asyncErrorBoundary(create)],
   update: [
     hasData,
     hasResId,
@@ -160,5 +163,9 @@ module.exports = {
     updateResStatusSeated,
     asyncErrorBoundary(update),
   ],
-  delete: [tableExists, notOccupied, clearTable],
+  delete: [
+    asyncErrorBoundary(tableExists),
+    notOccupied,
+    asyncErrorBoundary(clearTable),
+  ],
 };

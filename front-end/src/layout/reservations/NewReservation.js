@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../../utils/api";
+import ErrorAlert from "../ErrorAlert";
 import ReservationForm from "./ReservationForm";
 function NewReservation() {
   const history = useHistory();
@@ -40,15 +41,16 @@ function NewReservation() {
   };
 
   return (
-    <>
+    <div className="form-container">
       <h1> Create New Reservation</h1>
+      <ErrorAlert error={postResError} />
       <ReservationForm
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         formData={formData}
-        postResError={postResError}
+       
       />
-    </>
+    </div>
   );
 }
 
