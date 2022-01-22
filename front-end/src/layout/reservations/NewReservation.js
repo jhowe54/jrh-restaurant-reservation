@@ -17,21 +17,6 @@ function NewReservation() {
   const [formData, setFormData] = useState(initialFormState);
   const [postResError, setPostResError] = useState(false);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const newReservationDate = formData.reservation_date;
-    setPostResError(null);
-    formData.people = Number(formData.people);
-
-    try {
-      await createReservation(formData);
-      setFormData(initialFormState);
-      history.push(`/dashboard?date=${newReservationDate}`);
-    } catch (error) {
-      setPostResError(error);
-    }
-  };
-
   const handleChange = (event) => {
     event.preventDefault();
     setFormData((newReservation) => ({
@@ -40,6 +25,22 @@ function NewReservation() {
     }));
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const abortController = new AbortController();
+    let newReservationDate = formData.reservation_date;
+    setPostResError(null);
+    formData.people = Number(formData.people);
+
+    try {
+      await createReservation(formData, abortController.signal);
+      setFormData(initialFormState);
+      history.push(`/dashboard?date=${newReservationDate}`);
+    } catch (error) {
+      setPostResError(error);
+    }
+    return () => abortController.abort();
+  };
   return (
     <div className="form-container">
       <h1> Create New Reservation</h1>
@@ -48,7 +49,6 @@ function NewReservation() {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         formData={formData}
-       
       />
     </div>
   );

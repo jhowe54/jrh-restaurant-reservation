@@ -14,6 +14,16 @@ const validProperties = [
   "people",
 ];
 
+let days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
 async function reservationExists(req, res, next) {
   const reservation = await service.read(req.params.reservation_id);
 
@@ -65,16 +75,13 @@ async function hasValidProperties(req, res, next) {
 
   next();
 }
-
-let days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
+const hasRequiredProperties = hasProperties(
+  "first_name",
+  "last_name",
+  "mobile_number",
+  "reservation_date",
+  "people"
+); 
 
 function isValidDayOfWeek(req, res, next) {
   if (req.body.data) {
@@ -122,7 +129,6 @@ function isBooked(req, res, next) {
         "New reservations cannot start with a status of seated or finished",
     });
   }
-
   next();
 }
 
@@ -139,17 +145,36 @@ function hasValidStatus(req, res, next) {
   if (!validStatuses.includes(data.status)) {
     return next({ status: 400, message: "Received unknown status" });
   }
-
   next();
 }
 
-const hasRequiredProperties = hasProperties(
-  "first_name",
-  "last_name",
-  "mobile_number",
-  "reservation_date",
-  "people"
-);
+
+async function create(req, res, next) {
+  const newReservation = await service.create(req.body);
+  res.status(201).json({ data: newReservation });
+}
+
+async function read(req, res) {
+  const { reservation: data } = res.locals;
+  res.json({ data });
+}
+
+async function updateReservation(req, res) {
+  const updatedReservation = {
+    ...req.body,
+  };
+  const data = await service.updateReservation(updatedReservation);
+  res.json({ data });
+}
+
+async function updateStatus(req, res) {
+  const updatedReservation = {
+    ...res.locals.reservation,
+    status: req.body.data.status,
+  };
+  const data = await service.updateReservation(updatedReservation);
+  res.json({ data });
+}
 
 async function list(req, res, next) {
   const { date, mobile_number } = req.query;
@@ -162,35 +187,6 @@ async function list(req, res, next) {
   }
 }
 
-async function read(req, res) {
-  const { reservation: data } = res.locals;
-  res.json({ data });
-}
-
-async function create(req, res, next) {
-  const newReservation = await service.create(req.body);
-  res.status(201).json({ data: newReservation });
-}
-
-async function updateStatus(req, res) {
-  const updatedReservation = {
-    ...res.locals.reservation,
-    status: req.body.data.status,
-  };
-  const data = await service.updateReservation(updatedReservation);
-  //toDo: update the reservation status to seated when a table is assigned a reservation id
-  res.json({ data });
-}
-
-async function updateReservation(req, res) {
-  const updatedReservation = {
-    ...req.body,
-  };
-  const data = await service.updateReservation(updatedReservation);
-  //toDo: update the reservation status to seated when a table is assigned a reservation id
-  res.json({ data });
-}
-
 module.exports = {
   list: [asyncErrorBoundary(list)],
   read: [asyncErrorBoundary(reservationExists), read],
@@ -201,9 +197,13 @@ module.exports = {
     isValidDayOfWeek,
     asyncErrorBoundary(create),
   ],
-  updateStatus: [reservationExists, hasValidStatus, updateStatus],
+  updateStatus: [
+    asyncErrorBoundary(reservationExists),
+    hasValidStatus,
+    asyncErrorBoundary(updateStatus),
+  ],
   updateReservation: [
-    reservationExists,
+    asyncErrorBoundary(reservationExists),
     hasValidProperties,
     isValidDayOfWeek,
     asyncErrorBoundary(updateReservation),

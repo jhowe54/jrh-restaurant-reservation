@@ -8,16 +8,16 @@ import ErrorAlert from "../ErrorAlert";
 function EditReservation() {
   const history = useHistory();
   const { reservation_id } = useParams();
-  
-  let initialFormState = {
+
+  const initialFormState = {
     first_name: "",
     last_name: "",
     mobile_number: "",
     reservation_date: "",
     reservation_time: "",
     people: "",
-  }
-  
+  };
+
   const [reservationData, setReservationData] = useState(initialFormState);
   const [updateError, setUpdateError] = useState(null);
 
@@ -47,17 +47,23 @@ function EditReservation() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-   
+    const abortController = new AbortController();
+    let newReservationDate = reservationData.reservation_date;
+    reservationData.people = Number(reservationData.people);
+    setUpdateError(null);
     try {
       await updateReservation(reservationData);
-      history.push(`/dashboard?date=${reservationData.reservation_date}`);
+      setReservationData(initialFormState);
+      history.push(`/dashboard?date=${newReservationDate}`);
     } catch (error) {
       setUpdateError(error);
     }
+
+    return () => abortController.abort();
   };
 
   const handleChange = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     setReservationData((currentReservation) => ({
       ...currentReservation,
       [event.target.name]: event.target.value,
@@ -72,7 +78,6 @@ function EditReservation() {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         formData={reservationData}
-        
       />
     </>
   );
