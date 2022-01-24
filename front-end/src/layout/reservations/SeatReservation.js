@@ -29,7 +29,7 @@ function SeatReservation() {
   };
 
   return (
-    <main>
+    <main className="m-3">
       <div className="page-head-container">
         <h2>Seating Reservation Id: {reservationId.reservation_id}</h2>
       </div>

@@ -51,7 +51,7 @@ p {
 
 
 .reservation-tile {
-  background-color: #37393a;
+  background-color: #2b2d42;
   padding: 15px;
   border-radius: 10px;
   color: white;
@@ -79,7 +79,7 @@ p {
 
 .page-head-container {
   background-color: #91bbe0;
-  width: 55%;
+  width: 50%;
   padding: 15px;
   border-radius: 10px;
   border: 2px solid #5d85a8;
@@ -90,7 +90,7 @@ p {
 
 /*Table Display */
 .table-tile {
-  background-color: #37393a;
+  background-color: #2b2d42;
   padding: 15px;
   border-radius: 10px;
   color: white;
