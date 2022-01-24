@@ -314,7 +314,7 @@ Sending a GET request to the /tables/:table_id endpoint will return the table wi
 | `table_id`| `integer` | **required**: returns a specifc table                                               | /tables/1
 ***
 ## Installation
-```http
+```
 1. Fork and clone this repository.
 2. Run cp ./back-end/.env.sample ./back-end/.env.
 3. Update the ./back-end/.env file with the connection URLs to your ElephantSQL database instance.
