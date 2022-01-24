@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function ReservationDisplay({ reservations, handleCancel }) {
-  const reservationList = reservations.map((reservation, index) => {
+  const reservationList = reservations.map((reservation) => {
     if (
       reservation.status === "cancelled" ||
       reservation.status === "finished"

@@ -16,7 +16,6 @@ function NewTable() {
     event.preventDefault();
     setCreateTableError(null);
     formData.capacity = Number(formData.capacity);
-
     try {
       await createTable(formData);
       setFormData(initialFormState);
