@@ -60,30 +60,41 @@ function SearchReservations() {
   };
 
   return (
-    <main>
-      <h1 className="mb-0">Search Reservation By Phone Number</h1>
+    <main className="m-3">
+      <div className="page-head-container">
+        <h2>Search</h2>
+        </div>
       <ErrorAlert error={errors} />
-      <div className="search-reservation-form">
-        <form>
-          <input
-            type="tel"
-            id="currentNumber"
-            name="mobile_number"
-            placeholder="Enter a customer's phone number"
-            onChange={handleChange}
-            value={currentNumber.mobile_number}
-            required
-            className="search-item mb-2"
-          />
-        </form>
-        <button
-          onClick={handleSubmit}
-          type="submit"
-          className="btn btn-secondary search-item"
-        >
-          Find
-        </button>
-      </div>
+
+      <form className="form-card">
+        <fieldset>
+          <legend className="form-item">
+            Search Reservation By Phone Number
+          </legend>
+          <div className="form-item">
+            <input
+              className="form-input"
+              type="tel"
+              id="currentNumber"
+              name="mobile_number"
+              placeholder="Enter a customer's phone number"
+              onChange={handleChange}
+              value={currentNumber.mobile_number}
+              required
+            />
+          </div>
+        </fieldset>
+        <div className="form-item mt-2 mb-2">
+          <button
+            onClick={handleSubmit}
+            type="submit"
+            className="btn btn-secondary form-button"
+          >
+            Find
+          </button>
+        </div>
+      </form>
+
       {matchingReservations && matchingReservations.length ? (
         <ReservationDisplay
           reservations={matchingReservations}

@@ -22,7 +22,7 @@ function Dashboard({ date, setDate }) {
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const route = useRouteMatch()
+  const route = useRouteMatch();
   const q = useQuery();
 
   useEffect(() => {
@@ -31,7 +31,7 @@ function Dashboard({ date, setDate }) {
       if (dateQ) {
         setDate(dateQ);
       } else {
-        setDate(today())
+        setDate(today());
       }
     }
     updateDate();
@@ -88,15 +88,34 @@ function Dashboard({ date, setDate }) {
   };
 
   return (
-    <main>
-      <h1>Dashboard</h1>
-      <div className="mb-3">
-        <h2 className="mb-0">{`Reservations for date: ${date}`}</h2>
-      </div>
-      <div className="date-button-container">
-          <Link className="btn btn-primary date-button" to={`/dashboard?date=${previous(date)}`}>Previous</Link>
-          <Link className="btn btn-primary date-button" to={`/dashboard?date=${today()}`}>Today</Link>
-          <Link className="btn btn-primary date-button" to={`/dashboard?date=${next(date)}`}>Next</Link>
+    <main className="m-3">
+      <div className="page-head-container">
+        <h1>Dashboard</h1>
+        <div className="mb-3">
+          <h3 className="mb-0">
+            Reservations for date: <span>{date}</span>
+          </h3>
+        </div>
+        <div className="date-button-container m-2">
+          <Link
+            className="btn btn-primary date-button mb-2"
+            to={`/dashboard?date=${previous(date)}`}
+          >
+            Previous
+          </Link>
+          <Link
+            className="btn btn-primary date-button mb-2"
+            to={`/dashboard?date=${today()}`}
+          >
+            Today
+          </Link>
+          <Link
+            className="btn btn-primary date-button mb-2"
+            to={`/dashboard?date=${next(date)}`}
+          >
+            Next
+          </Link>
+        </div>
       </div>
       <ErrorAlert error={reservationsError} />
       <ReservationDisplay

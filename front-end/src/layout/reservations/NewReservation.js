@@ -42,15 +42,17 @@ function NewReservation() {
     return () => abortController.abort();
   };
   return (
-    <div className="form-container">
-      <h1> Create New Reservation</h1>
+    <main className="m-3">
+      <div className="page-head-container">
+        <h2> Create New Reservation</h2>
+      </div>
       <ErrorAlert error={postResError} />
       <ReservationForm
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         formData={formData}
       />
-    </div>
+    </main>
   );
 }
 

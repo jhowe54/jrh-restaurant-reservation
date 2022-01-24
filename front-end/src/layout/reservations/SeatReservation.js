@@ -12,7 +12,6 @@ function SeatReservation() {
 
   const handleChange = (event) => {
     event.preventDefault();
-    console.log("TABLEID", tableId);
     setTableId(Number(event.target.value));
   };
 
@@ -30,22 +29,39 @@ function SeatReservation() {
   };
 
   return (
-    <div>
-      <h4>Seating Reservation Id: {reservationId.reservation_id}</h4>
+    <main>
+      <div className="page-head-container">
+        <h2>Seating Reservation Id: {reservationId.reservation_id}</h2>
+      </div>
       <ErrorAlert error={seatingError} />
-      <form onSubmit={handleSeatTable}>
+      <form onSubmit={handleSeatTable} className="form-card">
         <fieldset>
-          <label htmlFor="table_id">Select a Table</label>
-          <select name="table_id" onChange={handleChange}>
-            <TableSelect />
-          </select>
-          <input type="submit" value={"Submit"} />
-          <input type="button" value={"Go Back"} onClick={() => history.goBack()} />
-          
+          <div className="form-item">
+            <label htmlFor="table_id">Select a Table</label>
+            <select
+              name="table_id"
+              className="form-input"
+              onChange={handleChange}
+            >
+              <TableSelect />
+            </select>
+          </div>
+          <div className="form-item mt-2 mb-2">
+            <input
+              type="submit"
+              className="btn btn-success form-button"
+              value={"Submit"}
+            />
+            <input
+              type="button"
+              className="btn btn-secondary form-button"
+              value={"Go Back"}
+              onClick={() => history.goBack()}
+            />
+          </div>
         </fieldset>
-        
       </form>
-    </div>
+    </main>
   );
 }
 

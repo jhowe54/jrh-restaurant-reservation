@@ -73,10 +73,10 @@ export async function createReservation(newReservation, signal) {
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({data: newReservation}),
+    body: JSON.stringify({ data: newReservation }),
     signal,
   };
-  return await fetchJson(url, options, newReservation)
+  return await fetchJson(url, options, newReservation);
 }
 
 export async function updateReservation(updatedReservation, signal) {
@@ -84,10 +84,10 @@ export async function updateReservation(updatedReservation, signal) {
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({data: updatedReservation}),
+    body: JSON.stringify({ data: updatedReservation }),
     signal,
   };
-  return await fetchJson(url, options, updatedReservation)
+  return await fetchJson(url, options, updatedReservation);
 }
 
 export async function changeResStatus(resId, status, signal) {
@@ -95,27 +95,28 @@ export async function changeResStatus(resId, status, signal) {
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({data: status}),
+    body: JSON.stringify({ data: status }),
     signal,
   };
-  return await fetchJson(url, options, resId)
+  return await fetchJson(url, options, resId);
 }
 
 export async function readReservation(reservationId, signal) {
   const url = `${API_BASE_URL}/reservations/${reservationId}`;
-  
+
   const options = {
     method: "GET",
     headers,
-    signal
-  }
-  return await fetchJson(url, options)
-    
+    signal,
+  };
+  return await fetchJson(url, options);
 }
 
 export async function searchReservations(mobile_number, signal) {
   const url = `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`;
-  return await fetchJson(url, {signal}).then(formatReservationDate).then(formatReservationTime)
+  return await fetchJson(url, { signal })
+    .then(formatReservationDate)
+    .then(formatReservationTime);
 }
 
 export async function listTables(signal) {
@@ -123,10 +124,9 @@ export async function listTables(signal) {
   const options = {
     method: "GET",
     headers,
-    signal
-  }
-  return await fetchJson(url, options)
-    
+    signal,
+  };
+  return await fetchJson(url, options);
 }
 
 export async function createTable(newTable, signal) {
@@ -134,35 +134,33 @@ export async function createTable(newTable, signal) {
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({data: newTable}),
+    body: JSON.stringify({ data: newTable }),
     signal,
   };
-  return await fetchJson(url, options, newTable)
+  return await fetchJson(url, options, newTable);
 }
 
- export async function updateTable(updatedTable, signal) {
+export async function updateTable(updatedTable, signal) {
   const url = `${API_BASE_URL}/tables/${updatedTable.table_id}/seat`;
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({data: updatedTable}),
-    signal
-  }
-  return await fetchJson(url, options, updatedTable)
-} 
-
+    body: JSON.stringify({ data: updatedTable }),
+    signal,
+  };
+  return await fetchJson(url, options, updatedTable);
+}
 
 export async function clearTable(updatedTable, signal) {
   const url = `${API_BASE_URL}/tables/${updatedTable.table_id}/seat`;
   const options = {
     method: "DELETE",
     headers,
-    body: JSON.stringify({data: updatedTable}),
-    signal
-  }
-  return await fetchJson(url, options, updatedTable)
-} 
-
+    body: JSON.stringify({ data: updatedTable }),
+    signal,
+  };
+  return await fetchJson(url, options, updatedTable);
+}
 
 export async function seatTable(reservation_id, tableId, signal) {
   const url = `${API_BASE_URL}/tables/${tableId}/seat`;
@@ -170,21 +168,17 @@ export async function seatTable(reservation_id, tableId, signal) {
     method: "PUT",
     headers,
     body: JSON.stringify({ data: { reservation_id } }),
-    signal
-  }
-  return await fetchJson(url, options)
+    signal,
+  };
+  return await fetchJson(url, options);
 }
-
-
 
 export async function readTable(tableId, signal) {
   const url = `${API_BASE_URL}/tables/${tableId}`;
-  console.log(url)
   const options = {
     method: "GET",
     headers,
-    signal
-  }
-  return await fetchJson(url, options)
-    
+    signal,
+  };
+  return await fetchJson(url, options);
 }

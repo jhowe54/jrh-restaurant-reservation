@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listTables } from "../../utils/api"
-
+import { listTables } from "../../utils/api";
 
 function TableSelect() {
   const [tableList, setTableList] = useState([]);
@@ -10,7 +9,6 @@ function TableSelect() {
       try {
         const response = await listTables();
         setTableList(response);
-        
       } catch (error) {
         if (error.name !== "AbortError") {
           throw error;
@@ -23,16 +21,14 @@ function TableSelect() {
 
   const tableOptions = tableList.map((table) => {
     return (
-      <option key={table.table_id} value={table.table_id}>{table.table_name} - {table.capacity}</option>
+      <option key={table.table_id} value={table.table_id}>
+        {table.table_name} - {table.capacity}
+      </option>
     );
   });
 
-  return tableOptions
-    
-        
-          
+  return tableOptions;
 }
-
 
 export default TableSelect;
 //<button type="button" onClick={() => history.push('/')}></button>

@@ -72,7 +72,9 @@ function EditReservation() {
 
   return (
     <>
-      <h1> Edit Reservation</h1>
+      <div className="page-head-container">
+        <h2> Edit Reservation</h2>
+      </div>
       <ErrorAlert error={updateError} />
       <ReservationForm
         handleChange={handleChange}
